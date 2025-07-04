@@ -1,0 +1,47 @@
+body.dashboard-body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('shield.png') no-repeat center center fixed;
+  background-size: 70%;
+  background-color: #102840;
+  color: #d3d3d3; /* Light grey text */
+  height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 15px 30px;
+  color: #d3d3d3; /* Light grey text */
+}
+
+.logout-btn {
+  background-color: #eee;
+  border: none;
+  padding: 8px 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dashboard-container h1 {
+  color: #d3d3d3; /* Light grey headline */
+}
+
+.action-btn {
+  background-color: #f0f0f0;
+  color: #102840;
+  border: none;
+  padding: 12px 18px;
+  margin: 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.action-btn:hover {
+  background-color: #ddd;
+}

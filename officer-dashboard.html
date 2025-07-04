@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Officer Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - Officer</div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1>Welcome, Officer!</h1>
+    <div class="dashboard-section">
+      <button class="action-btn">View My Schedule</button>
+      <button class="action-btn">Assigned Site Info</button>
+    </div>
+  </main>
+
+  <script>
+    // Redirect to login if not logged in or role isn't officer
+    window.onload = function () {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user || user.role !== "officer") {
+        window.location.href = "login.html";
+      }
+    };
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

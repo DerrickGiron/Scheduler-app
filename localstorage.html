@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Schedule</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script>
+    window.onload = function () {
+      const role = localStorage.getItem("userRole");
+      if (role !== "supervisor") {
+        alert("Unauthorized access. Redirecting to login.");
+        window.location.href = "login.html";
+      }
+    }
+
+    function handleScheduleSubmit(event) {
+      event.preventDefault();
+      const site = document.getElementById("site").value;
+      const officer = document.getElementById("officer").value;
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      const newSchedule = { site, officer, date, time };
+
+      // Retrieve existing schedules or initialize an empty array
+      const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
+      schedules.push(newSchedule);
+
+      // Save back to localStorage
+      localStorage.setItem("schedules", JSON.stringify(schedules));
+
+      alert(`Schedule created for Officer ${officer} at ${site} on ${date} at ${time}`);
+      document.getElementById("scheduleForm").reset();
+    }
+  </script>
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - Create Schedule</div>
+    <button class="logout-btn" onclick="localStorage.removeItem('userRole'); window.location.href='login.html';">Logout</button>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1>Create New Schedule</h1>
+    <form id="scheduleForm" onsubmit="handleScheduleSubmit(event)">
+      <input type="text" id="site" placeholder="Site Name or Address" required />
+      <input type="text" id="officer" placeholder="Officer Name or ID" required />
+      <input type="date" id="date" required />
+      <input type="time" id="time" required />
+      <button type="submit">Create</button>
+    </form>
+  </main>
+</body>
+</html>

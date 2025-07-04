@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Scheduler App</title>
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    function registerUser(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const role = document.getElementById("role").value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      const duplicate = users.find(user => user.email === email);
+      if (duplicate) {
+        alert("A user with this email already exists.");
+        return;
+      }
+
+      const newUser = { name, email, password, role };
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Registration successful! You can now log in.");
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="login-body">
+  <div class="login-box">
+    <form id="registerForm" onsubmit="registerUser(event)">
+      <h2>Create Account</h2>
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+      <select id="role" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="officer">Officer</option>
+        <option value="supervisor">Supervisor</option>
+      </select>
+      <button type="submit">Register</button>
+      <div class="form-links">
+        <a href="login.html">Already have an account? Login</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Supervisor Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script>
+    window.onload = function () {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user || user.role !== "supervisor") {
+        alert("Unauthorized access. Redirecting to login page.");
+        window.location.href = "login.html";
+      }
+    };
+
+    function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("userRole");
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - Supervisor</div>
+    <div>
+      <button class="nav-btn" onclick="window.location.href='supervisor-dashboard.html'">Dashboard</button>
+      <button class="nav-btn" onclick="window.location.href='create_schedule.html'">Create Schedule</button>
+      <button class="nav-btn" onclick="window.location.href='view_schedules.html'">View Schedules</button>
+      <button class="nav-btn" onclick="window.location.href='officer_list.html'">Officers</button>
+      <button class="nav-btn" onclick="window.location.href='site_info.html'">Sites</button>
+      <button class="nav-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1>Welcome, Supervisor!</h1>
+    <div class="dashboard-section">
+      <p>Select an option from the menu above to get started.</p>
+    </div>
+  </main>
+</body>
+</html>

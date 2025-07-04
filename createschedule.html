@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Schedule</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script>
+    // Redirect non-supervisors
+    window.onload = function () {
+      const role = localStorage.getItem("userRole");
+      if (role !== "supervisor") {
+        alert("Unauthorized access. Redirecting to login.");
+        window.location.href = "login.html";
+      }
+    }
+
+    // Submit handler (stub for now)
+    function handleScheduleSubmit(event) {
+      event.preventDefault();
+      const site = document.getElementById("site").value;
+      const officer = document.getElementById("officer").value;
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      alert(`Schedule created for Officer ${officer} at ${site} on ${date} at ${time}`);
+
+      // TODO: save data to backend or localStorage
+      document.getElementById("scheduleForm").reset();
+    }
+  </script>
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - Create Schedule</div>
+    <button class="logout-btn" onclick="localStorage.removeItem('userRole'); window.location.href='login.html';">Logout</button>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1>Create New Schedule</h1>
+    <form id="scheduleForm" onsubmit="handleScheduleSubmit(event)">
+      <input type="text" id="site" placeholder="Site Name or Address" required />
+      <input type="text" id="officer" placeholder="Officer Name or ID" required />
+      <input type="date" id="date" required />
+      <input type="time" id="time" required />
+      <button type="submit">Create</button>
+    </form>
+  </main>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Officers - Scheduler App</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script>
+    window.onload = function () {
+      const role = localStorage.getItem("userRole");
+      if (role !== "supervisor") {
+        alert("Unauthorized access. Redirecting to login.");
+        window.location.href = "login.html";
+      } else {
+        loadOfficers();
+      }
+    }
+
+    function loadOfficers() {
+      const officerList = [
+        { name: "John Smith", id: "O001" },
+        { name: "Jane Doe", id: "O002" },
+        { name: "Mike Johnson", id: "O003" }
+      ];
+
+      const container = document.getElementById("officerList");
+      officerList.forEach(officer => {
+        const div = document.createElement("div");
+        div.className = "officer-card";
+        div.innerHTML = `<strong>${officer.name}</strong><br>ID: ${officer.id}`;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - Officers</div>
+    <button class="logout-btn" onclick="localStorage.removeItem('userRole'); window.location.href='login.html';">Logout</button>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1>Officer List</h1>
+    <div id="officerList" class="dashboard-section"></div>
+  </main>
+</body>
+</html>

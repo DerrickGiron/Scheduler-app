@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Schedules - Scheduler App</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script>
+    window.onload = function () {
+      const role = localStorage.getItem("userRole");
+      if (role !== "supervisor") {
+        alert("Unauthorized access. Redirecting to login.");
+        window.location.href = "login.html";
+      } else {
+        loadSchedules();
+      }
+    };
+
+    function loadSchedules() {
+      const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
+      const container = document.getElementById("scheduleList");
+
+      if (schedules.length === 0) {
+        container.innerHTML = "<p>No schedules found.</p>";
+        return;
+      }
+
+      schedules.forEach((s, index) => {
+        const div = document.createElement("div");
+        div.className = "schedule-card";
+        div.innerHTML = `<strong>Schedule ${index + 1}</strong><br>
+                         Site: ${s.site}<br>
+                         Officer: ${s.officer}<br>
+                         Date: ${s.date}<br>
+                         Time: ${s.time}`;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - All Schedules</div>
+    <button class="logout-btn" onclick="localStorage.removeItem('userRole'); window.location.href='login.html';">Logout</button>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1>All Created Schedules</h1>
+    <div id="scheduleList" class="dashboard-section"></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Officer Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <script>
+    window.onload = function () {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user || user.role !== "officer") {
+        alert("Unauthorized access. Redirecting to login.");
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("welcomeMsg").innerText = `Welcome, Officer ${user.name || ''}!`;
+        loadOfficerSchedule(user.name || user.email);
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("userRole");
+      window.location.href = "login.html";
+    }
+
+    function loadOfficerSchedule(officerId) {
+      const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
+      const container = document.getElementById("scheduleList");
+      const filtered = schedules.filter(s => s.officer.toLowerCase().includes(officerId.toLowerCase()));
+
+      if (filtered.length === 0) {
+        container.innerHTML = "<p>No assigned schedules found.</p>";
+        return;
+      }
+
+      filtered.forEach((s, index) => {
+        const div = document.createElement("div");
+        div.className = "schedule-card";
+        div.innerHTML = `<strong>Schedule ${index + 1}</strong><br>
+                         Site: ${s.site}<br>
+                         Date: ${s.date}<br>
+                         Time: ${s.time}`;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</head>
+<body class="dashboard-body">
+  <nav class="navbar">
+    <div class="nav-title">Scheduler App - Officer</div>
+    <div>
+      <button class="nav-btn" onclick="window.location.href='officer-dashboard.html'">Dashboard</button>
+      <button class="nav-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <main class="dashboard-container">
+    <h1 id="welcomeMsg">Welcome, Officer!</h1>
+    <div id="scheduleList" class="dashboard-section"></div>
+  </main>
+</body>
+</html>
