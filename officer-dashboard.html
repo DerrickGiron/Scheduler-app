@@ -16,11 +16,12 @@
 
     <div class="dashboard-section">
       <button class="action-btn" onclick="showSchedule()">View My Schedule</button>
-      <button class="action-btn">Assigned Site Info</button>
+      <button class="action-btn" onclick="showAssignedSite()">Assigned Site Info</button>
     </div>
 
-    <!-- Hidden by default -->
+    <!-- Display areas -->
     <div id="scheduleList" class="dashboard-section" style="display: none;"></div>
+    <div id="siteInfo" class="dashboard-section" style="display: none;"></div>
   </main>
 
   <script>
@@ -48,11 +49,14 @@
       const user = JSON.parse(localStorage.getItem("user"));
       const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
       const scheduleList = document.getElementById("scheduleList");
+      const siteInfoDiv = document.getElementById("siteInfo");
+
+      // Hide other section
+      siteInfoDiv.style.display = "none";
 
       // Clear previous
       scheduleList.innerHTML = "";
 
-      // Filter by officer's email
       const officerSchedules = schedules.filter(
         s => s.officerEmail?.toLowerCase() === user.email.toLowerCase()
       );
@@ -75,6 +79,40 @@
       }
 
       scheduleList.style.display = "block";
+    }
+
+    function showAssignedSite() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
+      const siteInfoDiv = document.getElementById("siteInfo");
+      const scheduleList = document.getElementById("scheduleList");
+
+      // Hide other section
+      scheduleList.style.display = "none";
+
+      siteInfoDiv.innerHTML = "";
+
+      const assigned = schedules.filter(
+        s => s.officerEmail?.toLowerCase() === user.email.toLowerCase()
+      );
+
+      if (assigned.length === 0) {
+        siteInfoDiv.innerHTML = "<p>No site assignment found.</p>";
+      } else {
+        let html = "<h3>Assigned Site Info</h3><ul>";
+        assigned.forEach(s => {
+          html += `<li>
+            <strong>Site:</strong> ${s.site}<br>
+            <strong>Date:</strong> ${s.date}<br>
+            <strong>Time:</strong> ${s.startTime}<br>
+            <strong>Supervisor:</strong> ${s.supervisorName || "N/A"}
+          </li><br>`;
+        });
+        html += "</ul>";
+        siteInfoDiv.innerHTML = html;
+      }
+
+      siteInfoDiv.style.display = "block";
     }
   </script>
 </body>
