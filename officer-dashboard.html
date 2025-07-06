@@ -4,6 +4,36 @@
   <meta charset="UTF-8">
   <title>Officer Dashboard</title>
   <link rel="stylesheet" href="dashboard.css">
+  <style>
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #ffd700;
+    }
+    .reminder-container {
+      max-width: 300px;
+      margin: 2rem 1rem 1rem;
+    }
+    .reminder-header {
+      background-color: #0b2e4a;
+      color: #eb1414;
+      padding: 0.75rem 1rem;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      cursor: pointer;
+    }
+    .reminder-box {
+      background-color: #113c66;
+      padding: 1rem;
+      color: #fff;
+      font-size: 0.95rem;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      display: none;
+    }
+  </style>
 </head>
 <body class="dashboard-body">
   <nav class="navbar">
@@ -16,10 +46,18 @@
 
     <div class="dashboard-section">
       <button class="action-btn" onclick="showSchedule()">View My Schedule</button>
-      <button class="action-btn" onclick="showAssignedSite()">Assigned Site Info</button>
+      <button class="action-btn" onclick="showSiteInfo()">Assigned Site Info</button>
     </div>
 
-    <!-- Display areas -->
+    <!-- Reminder Message -->
+    <div class="reminder-container">
+      <div class="reminder-header" onclick="toggleReminder()">Reminder</div>
+      <div class="reminder-box" id="reminderBox">
+        <p>Please make sure to have all of your gears and credentials prior to standing post. Also, use the Google Maps feature to plan your departure time and avoid being late. If there is any issue, please contact your immediate supervisor.</p>
+      </div>
+    </div>
+
+    <!-- Hidden by default -->
     <div id="scheduleList" class="dashboard-section" style="display: none;"></div>
     <div id="siteInfo" class="dashboard-section" style="display: none;"></div>
   </main>
@@ -45,17 +83,19 @@
       window.location.href = "login.html";
     }
 
+    function toggleReminder() {
+      const box = document.getElementById("reminderBox");
+      box.style.display = box.style.display === "none" ? "block" : "none";
+    }
+
     function showSchedule() {
       const user = JSON.parse(localStorage.getItem("user"));
       const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
       const scheduleList = document.getElementById("scheduleList");
-      const siteInfoDiv = document.getElementById("siteInfo");
+      const siteInfo = document.getElementById("siteInfo");
 
-      // Hide other section
-      siteInfoDiv.style.display = "none";
-
-      // Clear previous
       scheduleList.innerHTML = "";
+      siteInfo.style.display = "none";
 
       const officerSchedules = schedules.filter(
         s => s.officerEmail?.toLowerCase() === user.email.toLowerCase()
@@ -71,7 +111,7 @@
             <strong>Schedule ${i + 1}</strong><br>
             <strong>Site:</strong> ${s.site}<br>
             <strong>Date:</strong> ${s.date}<br>
-            <strong>Time:</strong> ${s.startTime}<br>
+            <strong>Time:</strong> ${s.startTime} - ${s.endTime}<br>
             <strong>Supervisor:</strong> ${s.supervisorName || "N/A"}<br>
           `;
           scheduleList.appendChild(div);
@@ -81,38 +121,44 @@
       scheduleList.style.display = "block";
     }
 
-    function showAssignedSite() {
+    function showSiteInfo() {
       const user = JSON.parse(localStorage.getItem("user"));
       const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
-      const siteInfoDiv = document.getElementById("siteInfo");
-      const scheduleList = document.getElementById("scheduleList");
+      const siteInfo = document.getElementById("siteInfo");
 
-      // Hide other section
-      scheduleList.style.display = "none";
+      document.getElementById("scheduleList").style.display = "none";
+      siteInfo.innerHTML = "";
 
-      siteInfoDiv.innerHTML = "";
-
-      const assigned = schedules.filter(
+      const officerSchedules = schedules.filter(
         s => s.officerEmail?.toLowerCase() === user.email.toLowerCase()
       );
 
-      if (assigned.length === 0) {
-        siteInfoDiv.innerHTML = "<p>No site assignment found.</p>";
+      const siteMap = {
+        "Jackson Federal Building": {
+          address: "915 2nd Ave, Seattle, WA 98174",
+          link: "https://www.google.com/maps/dir/?api=1&destination=915+2nd+Ave,+Seattle,+WA+98174"
+        },
+        "Federal Aviation Administration": {
+          address: "2200 S 216th St, Des Moines, WA 98198",
+          link: "https://www.google.com/maps/dir/?api=1&destination=2200+S+216th+St,+Des+Moines,+WA+98198"
+        }
+      };
+
+      const assignedSites = [...new Set(officerSchedules.map(s => s.site))];
+
+      if (assignedSites.length === 0) {
+        siteInfo.innerHTML = "<p>No assigned sites found.</p>";
       } else {
-        let html = "<h3>Assigned Site Info</h3><ul>";
-        assigned.forEach(s => {
-          html += `<li>
-            <strong>Site:</strong> ${s.site}<br>
-            <strong>Date:</strong> ${s.date}<br>
-            <strong>Time:</strong> ${s.startTime}<br>
-            <strong>Supervisor:</strong> ${s.supervisorName || "N/A"}
-          </li><br>`;
+        assignedSites.forEach(site => {
+          const data = siteMap[site];
+          const div = document.createElement("div");
+          div.className = "site-card";
+          div.innerHTML = `<strong>${site}</strong><br><a href="${data.link}" target="_blank">${data.address}</a>`;
+          siteInfo.appendChild(div);
         });
-        html += "</ul>";
-        siteInfoDiv.innerHTML = html;
       }
 
-      siteInfoDiv.style.display = "block";
+      siteInfo.style.display = "block";
     }
   </script>
 </body>
