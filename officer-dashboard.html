@@ -12,25 +12,69 @@
   </nav>
 
   <main class="dashboard-container">
-    <h1>Welcome, Officer!</h1>
+    <h1 id="welcome-text">Welcome!</h1>
+
     <div class="dashboard-section">
-      <button class="action-btn">View My Schedule</button>
+      <button class="action-btn" onclick="showSchedule()">View My Schedule</button>
       <button class="action-btn">Assigned Site Info</button>
     </div>
+
+    <!-- Hidden by default -->
+    <div id="scheduleList" class="dashboard-section" style="display: none;"></div>
   </main>
 
   <script>
-    // Redirect to login if not logged in or role isn't officer
     window.onload = function () {
       const user = JSON.parse(localStorage.getItem("user"));
+
       if (!user || user.role !== "officer") {
         window.location.href = "login.html";
+        return;
+      }
+
+      // Show first name
+      if (user.fullName) {
+        const firstName = user.fullName.split(" ")[0];
+        document.getElementById("welcome-text").textContent = `Welcome, ${firstName}!`;
       }
     };
 
     function logout() {
       localStorage.removeItem("user");
       window.location.href = "login.html";
+    }
+
+    function showSchedule() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const schedules = JSON.parse(localStorage.getItem("schedules")) || [];
+      const scheduleList = document.getElementById("scheduleList");
+
+      // Clear previous
+      scheduleList.innerHTML = "";
+
+      // Filter by officer's email
+      const officerSchedules = schedules.filter(
+        s => s.officerEmail?.toLowerCase() === user.email.toLowerCase()
+      );
+
+      if (officerSchedules.length === 0) {
+        scheduleList.innerHTML = "<p>No assigned schedules found.</p>";
+      } else {
+        officerSchedules.forEach((s, i) => {
+          const div = document.createElement("div");
+          div.className = "schedule-card";
+          div.innerHTML = `
+            <strong>Schedule ${i + 1}</strong><br>
+            <strong>Site:</strong> ${s.site}<br>
+            <strong>Date:</strong> ${s.date}<br>
+            <strong>Time:</strong> ${s.startTime}<br>
+            <strong>Supervisor:</strong> ${s.supervisorName || "N/A"}<br>
+          `;
+          scheduleList.appendChild(div);
+        });
+      }
+
+      scheduleList.style.display = "block";
     }
   </script>
 </body>
