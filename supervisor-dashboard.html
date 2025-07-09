@@ -4,6 +4,15 @@
   <meta charset="UTF-8">
   <title>Supervisor Dashboard</title>
   <link rel="stylesheet" href="dashboard.css">
+  <style>
+    .box-style {
+      background-color: #113c66;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: white;
+    }
+  </style>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script type="text/javascript">
     (function(){
@@ -111,7 +120,7 @@
 
       schedules.forEach((s, i) => {
         const div = document.createElement("div");
-        div.className = "schedule-card";
+        div.className = "schedule-card box-style";
         div.innerHTML = `
           <strong>Schedule ${i + 1}</strong><br>
           Site: <input value="${s.site}" id="site-${i}" /><br>
@@ -163,7 +172,7 @@
       officers.forEach(officer => {
         const assigned = schedules.filter(s => s.officerEmail.toLowerCase() === officer.email.toLowerCase());
         const div = document.createElement("div");
-        div.className = "officer-card";
+        div.className = "officer-card box-style";
         div.innerHTML = `
           <strong>${officer.fullName}</strong> (${officer.email})<br>
           <em>Schedules Assigned: ${assigned.length}</em><br>
@@ -178,7 +187,7 @@
 
       predefinedSites.forEach((site, index) => {
         const div = document.createElement("div");
-        div.className = "site-card";
+        div.className = "site-card box-style";
         div.innerHTML = `<strong>Site ${index + 1}:</strong> ${site.name}<br><em>Address:</em> ${site.address}`;
         siteList.appendChild(div);
       });
@@ -199,12 +208,12 @@
   </nav>
 
   <main class="dashboard-container">
-    <section id="dashboard" class="content-section">
+    <section id="dashboard" class="content-section box-style">
       <h1 id="welcome-text">Welcome!</h1>
       <p>Select an option from the menu above to get started.</p>
     </section>
 
-    <section id="createSchedule" class="content-section" style="display: none;">
+    <section id="createSchedule" class="content-section box-style" style="display: none;">
       <h2>Create New Schedule</h2>
       <form id="scheduleForm" onsubmit="handleScheduleSubmit(event)">
         <select id="siteDropdown" required></select>
@@ -216,17 +225,17 @@
       </form>
     </section>
 
-    <section id="viewSchedules" class="content-section" style="display: none;">
+    <section id="viewSchedules" class="content-section box-style" style="display: none;">
       <h2>All Scheduled Shifts</h2>
       <div id="scheduleList"></div>
     </section>
 
-    <section id="officers" class="content-section" style="display: none;">
+    <section id="officers" class="content-section box-style" style="display: none;">
       <h2>Officers</h2>
       <div id="officersList"></div>
     </section>
 
-    <section id="sites" class="content-section" style="display: none;">
+    <section id="sites" class="content-section box-style" style="display: none;">
       <h2>Sites</h2>
       <div id="siteList"></div>
     </section>
